@@ -23,12 +23,14 @@ git clone git@github.com:utpalpaul108/Dashcam-Footage-Analysis.git
 Using Anaconda Virtual Environments
 
 ```bash
+cd Dashcam-Footage-Analysis
 conda create -n venv python=3.10 -y
 conda activate venv
 ```
 Or for Linux operating system, you can use that
 
 ```bash
+cd Dashcam-Footage-Analysis
 python3.10 -m venv venv
 source venv/bin/activate
 ```
