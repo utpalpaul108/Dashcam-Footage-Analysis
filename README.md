@@ -18,7 +18,7 @@ Here, I have used the pre-trained YOLOv10 model. However, you can also use your 
 ```bash
 git clone git@github.com:utpalpaul108/Dashcam-Footage-Analysis.git
 ```
-<div style="padding-top:10px"><b>STEP 01 :</b> Create a virtual environment after opening the repository and then activate the environment</div>
+<div style="padding-top:10px"><b>STEP 01 :</b> Create a virtual environment after opening the repository and then activate the environment</div><br>
 
 Using Anaconda Virtual Environments
 
