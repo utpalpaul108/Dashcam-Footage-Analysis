@@ -49,9 +49,12 @@ def process_video(videoFilepath):
     except OSError as e:
         raise e
 
-    model = YOLO("artifacts/model/yolov10s.pt")
+    model = YOLO("artifacts/model/yolov8m.pt")
 
-    line_points = [(20, 900), (1910-20, 900)]  # line or region points
+    line_points = [(0, 1000), (1920, 1000), (1920, 750), (0, 750), (0, 1000)]  # line or region points
+    # line_points = [(0, 800), (1920, 800)]  # line or region points
+    # Define class names for all classes you're tracking
+    classes_names = {0: 'pedestrian', 1: 'vehicle', 2: 'vehicle', 3: 'vehicle', 5: 'vehicle', 7: 'vehicle'}
     classes_to_count = [0, 1, 2, 3, 5, 7] # person, bicycle, car, motorcycle, bus, truck
 
     cap = cv2.VideoCapture(videoFilepath)
@@ -70,18 +73,19 @@ def process_video(videoFilepath):
     counter = ObjectCounter(
         view_img=False,
         reg_pts=line_points,
-        classes_names=model.names,
+        classes_names=classes_names,
         draw_tracks=True,
         line_thickness=3,
         track_thickness=3,
-        region_thickness=5
+        region_thickness=3,
+        count_reg_color=(255, 255, 255)
     )
 
     # Frame counter
     frame_count = 0
 
     # Define frame skip rate (process every nth frame)
-    skip_rate = 5  # Process every 5th frame
+    skip_rate = 1  # Process every Nth frame
 
     # Progress bar
     progress_bar = st.progress(0)
@@ -96,7 +100,7 @@ def process_video(videoFilepath):
 
         if frame_count % skip_rate == 0:
             tracks = model.track(
-                frame, persist=True, show=False, verbose=True, classes=classes_to_count)
+                frame, persist=True, show=False, verbose=True, classes=classes_to_count, conf=0.4, tracker="bytetrack.yaml")
             frame = counter.start_counting(frame, tracks)
             video_writer.write(frame)
 

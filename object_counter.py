@@ -157,7 +157,7 @@ class ObjectCounter:
             # Extract tracks
             for box, track_id, cls in zip(boxes, track_ids, clss):
                 # Draw bounding box
-                self.annotator.box_label(box, label=f"{self.names[cls]}#{track_id}", color=colors(int(track_id), True))
+                self.annotator.box_label(box, label=f"{self.names[cls]}#TID{track_id}", color=colors(int(track_id), True))
 
                 # Store class info
                 if self.names[cls] not in self.class_wise_count:
@@ -214,11 +214,14 @@ class ObjectCounter:
                 if not self.view_in_counts and not self.view_out_counts:
                     continue
                 elif not self.view_in_counts:
-                    labels_dict[str.capitalize(key)] = f"OUT {value['OUT']}"
+                    # labels_dict[str.capitalize(key)] = f"OUT {value['OUT']}"
+                    labels_dict[str.capitalize(key)] = value['OUT']
                 elif not self.view_out_counts:
-                    labels_dict[str.capitalize(key)] = f"IN {value['IN']}"
+                    # labels_dict[str.capitalize(key)] = f"IN {value['IN']}"
+                    labels_dict[str.capitalize(key)] = value['IN']
                 else:
-                    labels_dict[str.capitalize(key)] = f"IN {value['IN']} OUT {value['OUT']}"
+                    # labels_dict[str.capitalize(key)] = f"IN {value['IN']} OUT {value['OUT']}"
+                    labels_dict[str.capitalize(key)] = value['IN'] + value['OUT']
 
         if labels_dict:
             self.annotator.display_analytics(self.im0, labels_dict, self.count_txt_color, self.count_bg_color, 10)
