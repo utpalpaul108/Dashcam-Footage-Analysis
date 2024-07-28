@@ -37,7 +37,7 @@ if 'video_processed' not in st.session_state:
 if 'result' not in st.session_state:
     st.session_state.result = None
 
-# Streamlit application Title
+# Application Title
 st.title("Dashcam Footage Analysis")
 
 # Function to process the video
@@ -51,8 +51,10 @@ def process_video(videoFilepath):
 
     model = YOLO("artifacts/model/yolov8m.pt")
 
-    line_points = [(0, 1000), (1920, 1000), (1920, 750), (0, 750), (0, 1000)]  # line or region points
+    line_points = None
+    # line_points = [(0, 1000), (1920, 1000), (1920, 750), (0, 750), (0, 1000)]  # line or region points
     # line_points = [(0, 800), (1920, 800)]  # line or region points
+    
     # Define class names for all classes you're tracking
     classes_names = {0: 'pedestrian', 1: 'vehicle', 2: 'vehicle', 3: 'vehicle', 5: 'vehicle', 7: 'vehicle'}
     classes_to_count = [0, 1, 2, 3, 5, 7] # person, bicycle, car, motorcycle, bus, truck
@@ -66,7 +68,7 @@ def process_video(videoFilepath):
     video_writer = cv2.VideoWriter(
         "artifacts/output/dashcam_footage_counting_output.mp4", cv2.VideoWriter_fourcc(*"mp4v"), fps, (w, h))
 
-    # Get the total number of frames
+    # Total number of frames
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
     # Init Object Counter
@@ -100,7 +102,7 @@ def process_video(videoFilepath):
 
         if frame_count % skip_rate == 0:
             tracks = model.track(
-                frame, persist=True, show=False, verbose=True, classes=classes_to_count, conf=0.4, tracker="bytetrack.yaml")
+                frame, persist=True, show=False, verbose=True, classes=classes_to_count, conf=0.3, iou=0.5, tracker="config/botsort.yaml")
             frame = counter.start_counting(frame, tracks)
             video_writer.write(frame)
 
@@ -169,7 +171,7 @@ if uploaded_file is not None:
     if st.session_state.video_processed:
         display_results(st.session_state.result)
 
-    # Optionally, delete the temporary file
+    # Delete the temporary file (Optional)
     os.remove(tmp_filepath)
 
     

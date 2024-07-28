@@ -59,7 +59,8 @@ class ObjectCounter:
         self.selected_point = None
 
         # Region & Line Information
-        self.reg_pts = [(20, 400), (1260, 400)] if reg_pts is None else reg_pts
+        self.reg_pts = [] if reg_pts is None else reg_pts
+        # self.reg_pts = [(20, 400), (1260, 400)] if reg_pts is None else reg_pts
         self.line_dist_thresh = line_dist_thresh
         self.counting_region = None
         self.region_color = count_reg_color
@@ -104,10 +105,10 @@ class ObjectCounter:
         elif len(self.reg_pts) >= 3:
             print("Polygon Counter Initiated.")
             self.counting_region = Polygon(self.reg_pts)
-        else:
-            print("Invalid Region points provided, region_points must be 2 for lines or >= 3 for polygons.")
-            print("Using Line Counter Now")
-            self.counting_region = LineString(self.reg_pts)
+        # else:
+        #     print("Invalid Region points provided, region_points must be 2 for lines or >= 3 for polygons.")
+        #     print("Using Line Counter Now")
+        #     self.counting_region = LineString(self.reg_pts)
 
     def mouse_event_for_region(self, event, x, y, flags, params):
         """
@@ -206,6 +207,12 @@ class ObjectCounter:
                             else:
                                 self.out_counts += 1
                                 self.class_wise_count[self.names[cls]]["OUT"] += 1
+
+                # Count objects without any line points
+                else:
+                    if prev_position is not None and track_id not in self.count_ids:
+                        self.count_ids.append(track_id)
+                        self.class_wise_count[self.names[cls]]["IN"] += 1
 
         labels_dict = {}
 
