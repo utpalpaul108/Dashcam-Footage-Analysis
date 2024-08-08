@@ -101,10 +101,13 @@ def process_video(videoFilepath):
             break
 
         if frame_count % skip_rate == 0:
-            tracks = model.track(
-                frame, persist=True, show=False, verbose=True, classes=classes_to_count, conf=0.3, iou=0.5, tracker="config/botsort.yaml")
-            frame = counter.start_counting(frame, tracks)
-            video_writer.write(frame)
+            try:
+                tracks = model.track(
+                    frame, persist=True, show=False, verbose=True, classes=classes_to_count, conf=0.4, iou=0.5, tracker="config/botsort.yaml")
+                frame = counter.start_counting(frame, tracks)
+                video_writer.write(frame)
+            except Exception as e:
+                pass
 
         # Increment frame counter
         frame_count += 1
